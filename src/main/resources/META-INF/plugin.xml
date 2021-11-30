@@ -9,10 +9,16 @@
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceImplementation="com.github.alonwang.lpcintellijplugin.services.MyApplicationService"/>
         <projectService serviceImplementation="com.github.alonwang.lpcintellijplugin.services.MyProjectService"/>
+        <fileType name="LPC File"
+                  implementationClass="com.github.alonwang.lpcintellijplugin.lpc.LPCFileType"
+                  fieldName="INSTANCE"
+                  language="LPC"
+                  extensions="c" />
     </extensions>
 
     <applicationListeners>
         <listener class="com.github.alonwang.lpcintellijplugin.listeners.MyProjectManagerListener"
                   topic="com.intellij.openapi.project.ProjectManagerListener"/>
     </applicationListeners>
+
 </idea-plugin>
