@@ -1,6 +1,5 @@
-package com.github.alonwang.lpcintellijplugin.lpc;
+package com.github.alonwang.lpcintellijplugin;
 
-import com.intellij.lang.Language;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.util.NlsContexts;
 import com.intellij.openapi.util.NlsSafe;

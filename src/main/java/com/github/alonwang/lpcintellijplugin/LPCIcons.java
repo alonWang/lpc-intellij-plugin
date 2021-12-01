@@ -1,4 +1,4 @@
-package com.github.alonwang.lpcintellijplugin.lpc;
+package com.github.alonwang.lpcintellijplugin;
 
 import com.intellij.openapi.util.IconLoader;
 

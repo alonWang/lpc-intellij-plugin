@@ -10,7 +10,7 @@
         <applicationService serviceImplementation="com.github.alonwang.lpcintellijplugin.services.MyApplicationService"/>
         <projectService serviceImplementation="com.github.alonwang.lpcintellijplugin.services.MyProjectService"/>
         <fileType name="LPC File"
-                  implementationClass="com.github.alonwang.lpcintellijplugin.lpc.LPCFileType"
+                  implementationClass="com.github.alonwang.lpcintellijplugin.LPCFileType"
                   fieldName="INSTANCE"
                   language="LPC"
                   extensions="c" />
