@@ -6,6 +6,8 @@ fun properties(key: String) = project.findProperty(key).toString()
 plugins {
     // Java support
     id("java")
+
+    id("antlr")
     // Kotlin support
     id("org.jetbrains.kotlin.jvm") version "1.6.0"
     // Gradle IntelliJ Plugin
@@ -23,6 +25,12 @@ version = properties("pluginVersion")
 repositories {
     mavenCentral()
 }
+dependencies {
+    antlr("org.antlr:antlr4:4.9.2") {
+        exclude("com.ibm.icu", "icu4j")
+    }
+    implementation("org.antlr:antlr4-intellij-adaptor:0.1")
+}
 
 // Configure Gradle IntelliJ Plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
 intellij {
@@ -33,6 +41,7 @@ intellij {
     // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file.
     plugins.set(properties("platformPlugins").split(',').map(String::trim).filter(String::isNotEmpty))
 }
+
 
 // Configure Gradle Changelog Plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
 changelog {
