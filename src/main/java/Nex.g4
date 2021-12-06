@@ -1,54 +1,62 @@
 grammar Nex;
 
 program
-    : program statement
-    | statement
+    : program  stmt
+    |  stmt
     ;
-statement
-    :  meta_statement
-    | import_statement
-    | prot_define_statement
-    ;
-
-meta_statement
-    : Cmd '=' Integer
-    | CmdDesc '=' StringLiteral
-    | CanPause '=' (True | False)
-    ;
-import_statement
-    : 'from' Identifier 'import' '*'
-    ;
-prot_define_statement
-    : Identifier    '='  '{' prot_body '}'
-    ;
-prot_body
-    : prot_body (prot_meta_define | prot_body_define)
-    | (prot_meta_define | prot_body_define)
-    ;
- prot_meta_define
-    : '"' defineKeyword '"'  ':' defineVal ','
-    ;
- prot_body_define
-    : '"' Body '"' ':' '(' prot_field_list '),'
+stmt
+    : meta_stmt
+    | import_stmt
+    |  prot_def_stmt
     ;
 
-prot_field_list
-    : prot_field_list prot_field
-    | prot_field
+meta_stmt
+    : Cmd  Equal Integer
+    | CmdDesc  Equal StringLiteral
+    | CanPause  Equal (True | False)
+    ;
+import_stmt
+    : 'from' Identifier 'import' Star
+    ;
+ prot_def_stmt
+    : Identifier Equal  L_Brace  prot_stmt R_Brace
+    ;
+ prot_stmt
+    :  prot_stmt (prot_meta_stmt |  prot_body_stmt)
+    | (prot_meta_stmt |  prot_body_stmt)
+    ;
+ prot_meta_stmt
+    : Quota defineKeyword Quota  Colon  define_value Comma
+    ;
+  prot_body_stmt
+    : Quota Body Quota Colon L_Bracket prot_field_stmt_list R_Bracket Comma
+    ;
+
+prot_field_stmt_list
+    : prot_field_stmt_list prot_field_stmt
+    | prot_field_stmt
     ;
 // 什么时候决定TOKEN,什么时候Grammar   不用读值的就TOEKN
-prot_field
-    : '(' varType ','  '"' Identifier '"' '),'
-    | '(' ArrayType ','  '"' Identifier '",'  '('  prot_field_list '),'
+prot_field_stmt
+    : L_Bracket varType Comma  Quota Identifier Quota R_Bracket Comma
+    | L_Bracket arrayType Comma  Quota Identifier Quota Comma  L_Bracket  prot_field_stmt_list R_Bracket R_Bracket Comma
     ;
-defineVal
+define_value
     : Integer
     | StringLiteral
-    | '"' Identifier '"'
-    | '"' IdentifierWithDot '"'
+    | Quota Identifier Quota
+    | Quota IdentifierWithDot Quota
+    | (True | False)
     ;
 
 Colon : ':';
+Quota : '"';
+Comma : ',';
+Star : '*';
+L_Bracket : '(';
+R_Bracket : ')';
+L_Brace: '{';
+R_Brace: '}';
 Equal : '=';
 True : 'True';
 False : 'False';
@@ -67,8 +75,8 @@ defineKeyword
     | Mod
     | Func
     | Desc
+    | CanPause
     ;
-
 Identifier
     : NonDigit
     ( NonDigit
@@ -83,7 +91,7 @@ IdentifierWithDot
       )*
   ;
 StringLiteral
-    :   'u' '"' ~["\\\r\n]+ '"'
+    :   'u' Quota ~["\\\r\n]+ Quota
     ;
 
 Integer
@@ -108,7 +116,7 @@ varType
     | 'INT16'
     ;
 
-ArrayType
+arrayType
     : 'ARRAY'
     ;
 
