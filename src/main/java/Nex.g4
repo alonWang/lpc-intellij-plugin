@@ -13,7 +13,8 @@ stmt
 meta_stmt
     : Cmd  Equal Integer
     | CmdDesc  Equal StringLiteral
-    | CanPause  Equal (True | False)
+    | CanPause  Equal boolean
+    | Cmd_In_Mem Equal boolean
     ;
 import_stmt
     : 'from' Identifier 'import' Star
@@ -39,14 +40,18 @@ prot_field_stmt_list
 // 什么时候决定TOKEN,什么时候Grammar   不用读值的就TOEKN
 prot_field_stmt
     : L_Bracket varType Comma  Quota Identifier Quota R_Bracket Comma
-    | L_Bracket arrayType Comma  Quota Identifier Quota Comma  L_Bracket  prot_field_stmt_list R_Bracket R_Bracket Comma
+    | L_Bracket complexType Comma  Quota Identifier Quota Comma  L_Bracket  prot_field_stmt_list R_Bracket R_Bracket Comma
     ;
 define_value
     : Integer
     | StringLiteral
     | Quota Identifier Quota
-    | Quota IdentifierWithDot Quota
+    | Quota mod_Str Quota
     | (True | False)
+    ;
+boolean
+    : True
+    | False
     ;
 
 Colon : ':';
@@ -65,17 +70,22 @@ False : 'False';
 Cmd: 'CMD';
 CmdDesc: 'CMD_DESC';
 CanPause: 'CAN_PAUSE';
+Cmd_In_Mem: 'KEEP_IN_MEM';
 SubCmd: 'SUBCMD';
 Mod: 'MOD';
 Func: 'FUNC';
 Desc: 'DESC';
 Body: 'BODY';
+Priority: 'PRIORITY';
+Function_On_Enqueue : 'FUNC_ON_ENQUEUE';
 defineKeyword
     : SubCmd
     | Mod
     | Func
     | Desc
     | CanPause
+    | Priority
+    | Function_On_Enqueue
     ;
 Identifier
     : NonDigit
@@ -83,19 +93,22 @@ Identifier
     | Digit
     )*
     ;
-IdentifierWithDot
-    :NonDigit
-    ( NonDigit
-     | Digit
-     | '.'
-      )*
-  ;
+mod_Str
+        :NonDigit
+            ( NonDigit
+             | Digit
+             | '\.'
+             | '/'
+              )*
+          ;
+
+
 StringLiteral
     :   'u' Quota ~["\\\r\n]+ Quota
     ;
 
 Integer
-    : Digit+
+    : ('+'| '-')? Digit+
     ;
 
 fragment
@@ -116,8 +129,8 @@ varType
     | 'INT16'
     ;
 
-arrayType
-    : 'ARRAY'
+complexType
+    : 'ARRAY' | 'OPTIONAL'
     ;
 
 
