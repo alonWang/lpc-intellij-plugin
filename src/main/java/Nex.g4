@@ -11,10 +11,7 @@ stmt
     ;
 
 meta_stmt
-    : Cmd  Equal Integer
-    | CmdDesc  Equal StringLiteral
-    | CanPause  Equal boolean
-    | Cmd_In_Mem Equal boolean
+    : Identifier  Equal (Integer| UnicodeString |StringLiteral | boolean  )
     ;
 import_stmt
     : 'from' Identifier 'import' Star
@@ -27,7 +24,7 @@ import_stmt
     | (prot_meta_stmt |  prot_body_stmt)
     ;
  prot_meta_stmt
-    : Quota defineKeyword Quota  Colon  define_value Comma
+    : MetaIdentifier  Colon  define_value Comma
     ;
   prot_body_stmt
     : Quota Body Quota Colon L_Bracket prot_field_stmt_list R_Bracket Comma
@@ -44,9 +41,8 @@ prot_field_stmt
     ;
 define_value
     : Integer
+    | UnicodeString
     | StringLiteral
-    | Quota Identifier Quota
-    | Quota mod_Str Quota
     | (True | False)
     ;
 boolean
@@ -67,51 +63,41 @@ True : 'True';
 False : 'False';
 
 //TOKEN根据声明顺序决定优先级
-Cmd: 'CMD';
-CmdDesc: 'CMD_DESC';
-CanPause: 'CAN_PAUSE';
-Cmd_In_Mem: 'KEEP_IN_MEM';
-SubCmd: 'SUBCMD';
-Mod: 'MOD';
-Func: 'FUNC';
-Desc: 'DESC';
-Body: 'BODY';
-Priority: 'PRIORITY';
-Function_On_Enqueue : 'FUNC_ON_ENQUEUE';
-defineKeyword
-    : SubCmd
-    | Mod
-    | Func
-    | Desc
-    | CanPause
-    | Priority
-    | Function_On_Enqueue
-    ;
+//Cmd: 'CMD';
+//CmdDesc: 'CMD_DESC';
+//CanPause: 'CAN_PAUSE';
+//Cmd_In_Mem: 'KEEP_IN_MEM';
+//SubCmd: 'SUBCMD';
+//Mod: 'MOD';
+//Func: 'FUNC';
+//Desc: 'DESC';
+//Body: 'BODY';
+//Priority: 'PRIORITY';
+//Function_On_Enqueue : 'FUNC_ON_ENQUEUE';
+
+
 Identifier
     : NonDigit
     ( NonDigit
     | Digit
     )*
     ;
-mod_Str
-        :NonDigit
-            ( NonDigit
-             | Digit
-             | '\.'
-             | '/'
-              )*
-          ;
-
+MetaIdentifier
+    : Quota Identifier Quota
+    ;
+UnicodeString
+    : 'u' StringLiteral
+    ;
 
 StringLiteral
-    :   'u' Quota ~["\\\r\n]+ Quota
+    :    Quota ~["\\\r\n]+ Quota
     ;
 
 Integer
     : ('+'| '-')? Digit+
     ;
 
-fragment
+
 NonDigit
     : [a-zA-Z_]
     ;
